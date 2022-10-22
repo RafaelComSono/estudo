@@ -1,0 +1,21 @@
+<h1 class="d-flex justify-content-center mt-5 retro-text">Finger Speed!</h1>
+<div class="d-flex justify-content-center card-finger-speed">
+    <div class="card text-center border-0 shadow-lg p-3 mb-5 bg-white rounded" style="width: 50rem;">
+        <div class="card-body">
+            <p>Pontuação mais alta: {{poiting}}</p>
+            <p>Pontuação atual: {{actualPoiting}}</p>
+            <p>Tempo: {{timeLeft}}s</p>
+            <p>{{introductionText}}</p>
+            <div class="mx-5 mt-5">
+                <h4 class="mb-5">{{randomWord}}</h4>
+                <input type="text" (keyup)="checkText()" class="form-control" [(ngModel)]="inputValue"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" [readonly]="cantWrite"
+                    placeholder="Digite aqui...">
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto mt-5">
+                <button class="btn btn-primary third-button border-0" type="button" 
+                [disabled]="gameStarted" (click)="start()"><span>Play</span></button>
+            </div>
+        </div>
+    </div>
+</div>
