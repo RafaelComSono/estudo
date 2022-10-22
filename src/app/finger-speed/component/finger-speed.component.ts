@@ -11,7 +11,7 @@ import 'jquery';
 export class FingerSpeedComponent implements OnInit {
   poiting: number = 0
   actualPoiting: number = 0;
-  randomWord: string = faker.name.fullName();
+  randomWord: string = faker.animal.insect();
   inputValue: string = ''!;
   timerOver: boolean = false;
   interval: NodeJS.Timer = null!;
@@ -48,7 +48,7 @@ export class FingerSpeedComponent implements OnInit {
 
   checkText(): void {
     if (this.inputValue == this.randomWord) {
-      this.randomWord = faker.name.fullName();
+      this.randomWord = faker.animal.insect();
       this.inputValue = '';
       this.actualPoiting = +this.actualPoiting + 10;
       this.timeLeft = 5;
