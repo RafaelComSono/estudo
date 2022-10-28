@@ -28,7 +28,7 @@ export class FingerSpeedComponent implements OnInit {
   }
 
   getPontuacao(): void {
-    let hasLocalStorage = localStorage.getItem('pontuação') !== null;
+    let hasLocalStorage = localStorage.getItem('pontuação') !== null || localStorage.getItem('pontuação) !== 'undefined';
     localStorage['pontuação'] = hasLocalStorage ? localStorage['pontuação'] : 0;
     this.record = hasLocalStorage ? localStorage['pontuação'] : this.record;
     this.poiting = localStorage['pontuação'] ? localStorage['pontuação'] : 0;
