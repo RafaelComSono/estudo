@@ -10,11 +10,11 @@ import Swal from 'sweetalert2'
 export class FingerSpeedComponent implements OnInit {
   poiting: number = 0
   actualPoiting: number = 0;
-  randomWord: string = faker.animal.insect();
+  randomWord: string = this.getRandomWords();
   inputValue: string = '';
   timerOver: boolean = false;
   interval: NodeJS.Timer = null!;
-  timeLeft: number = 5;
+  timeLeft: number = 10;
   startTimeLeft: number = 5;
   cantWrite: boolean = true;
   gameStarted: boolean = false;
@@ -24,14 +24,22 @@ export class FingerSpeedComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.getPontuacao();
+    this.getPoints();
   }
 
-  getPontuacao(): void {
+  getPoints(): void {
     let hasLocalStorage = localStorage.getItem('pontuação') !== null;
     localStorage['pontuação'] = hasLocalStorage ? localStorage['pontuação'] : 0;
     this.record = hasLocalStorage ? localStorage['pontuação'] : this.record;
     this.poiting = localStorage['pontuação'] ? localStorage['pontuação'] : 0;
+  }
+
+  getRandomWords(): string{
+    let randomWordList = [ 
+      faker.name.fullName(), faker.animal.insect(), faker.address.cityName(), faker.company.name(),
+      faker.animal.cat(), faker.animal.fish(), faker.name.jobArea(), faker.music.songName(), faker.hacker.verb()
+    ]
+    return randomWordList.sort()[0];
   }
 
   start(){
@@ -51,10 +59,10 @@ export class FingerSpeedComponent implements OnInit {
 
   checkText(): void {
     if (this.inputValue == this.randomWord) {
-      this.randomWord = faker.animal.insect();
+      this.randomWord = this.getRandomWords();
       this.inputValue = '';
-      this.actualPoiting = + this.actualPoiting + 10;
-      this.timeLeft = 5;
+      this.actualPoiting = + this.actualPoiting + 100;
+      this.timeLeft = 10;
       if (this.actualPoiting > localStorage['pontuação']) {
         localStorage['pontuação'] = this.actualPoiting;
         this.poiting = this.actualPoiting;
@@ -62,7 +70,7 @@ export class FingerSpeedComponent implements OnInit {
     }
   }
 
-  gameOver(){
+  gameOver(): void{
     if(localStorage['pontuação'] > this.record && this.timeLeft === 0){
       Swal.fire({
         title: 'Boa, você ultrapassou seu recorde!',
@@ -84,12 +92,12 @@ export class FingerSpeedComponent implements OnInit {
     this.introductionText = 'Tempo esgotado! Clique no play para começar novamente'
     this.gameStarted = false;
     this.pauseTimer(this.interval)
-    this.timeLeft = 5;
+    this.timeLeft = 10;
     this.startTimeLeft = 5;
     this.actualPoiting = 0;
   }
 
-  startTimer() {
+  startTimer(): void {
     this.cantWrite = false;
     this.interval = setInterval(() => {
       if(this.timeLeft > 0) {
@@ -101,7 +109,7 @@ export class FingerSpeedComponent implements OnInit {
     },1000)
   }
 
-  pauseTimer(interval: NodeJS.Timer) {
+  pauseTimer(interval: NodeJS.Timer): void {
     clearInterval(interval);
   }
 }
