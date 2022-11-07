@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,HostBinding, OnInit } from '@angular/core';
 import { faker } from '@faker-js/faker';
+import { FormControl } from '@angular/forms';
+
 import Swal from 'sweetalert2'
 
 @Component({
@@ -9,29 +11,39 @@ import Swal from 'sweetalert2'
 })
 export class FingerSpeedComponent implements OnInit {
   poiting: number = 0
-  actualPoiting: number = 0;
-  randomWord: string = this.getRandomWords();
-  inputValue: string = '';
-  timerOver: boolean = false;
-  interval: NodeJS.Timer = null!;
-  timeLeft: number = 10;
-  startTimeLeft: number = 5;
-  cantWrite: boolean = true;
-  gameStarted: boolean = false;
-  introductionText: string = 'Clique no botão de Play para jogar!';
-  record: number = 0;
+  actualPoiting: number = 0
+  randomWord: string = this.getRandomWords()
+  inputValue: string = ''
+  timerOver: boolean = false
+  interval: NodeJS.Timer = null!
+  timeLeft: number = 10
+  startTimeLeft: number = 5
+  cantWrite: boolean = true
+  gameStarted: boolean = false
+  introductionText: string = 'Clique no botão de Play para jogar!'
+  record: number = 0
+  isDarkTheme: boolean = false
 
   constructor() { }
 
   ngOnInit(): void {
-    this.getPoints();
+    this.getTheme()
+    this.getPoints()
+  }
+
+  getTheme(): void{
+    let bodyDocument = document.body
+    let hasLocalStorage = localStorage.getItem('theme') !== null
+    localStorage['theme'] = hasLocalStorage ? localStorage['theme'] : 'lightMode'
+    bodyDocument.classList.add(localStorage['theme'])
+    this.isDarkTheme = localStorage['theme'] == 'darkMode'
   }
 
   getPoints(): void {
-    let hasLocalStorage = localStorage.getItem('pontuação') !== null;
-    localStorage['pontuação'] = hasLocalStorage ? localStorage['pontuação'] : 0;
-    this.record = hasLocalStorage ? localStorage['pontuação'] : this.record;
-    this.poiting = localStorage['pontuação'] ? localStorage['pontuação'] : 0;
+    let hasLocalStorage = localStorage.getItem('pontuação') !== null
+    localStorage['pontuação'] = hasLocalStorage ? localStorage['pontuação'] : 0
+    this.record = hasLocalStorage ? localStorage['pontuação'] : this.record
+    this.poiting = localStorage['pontuação'] ? localStorage['pontuação'] : 0
   }
 
   getRandomWords(): string{
@@ -39,33 +51,48 @@ export class FingerSpeedComponent implements OnInit {
       faker.name.fullName(), faker.animal.insect(), faker.address.cityName(), faker.company.name(),
       faker.animal.cat(), faker.animal.fish(), faker.name.jobArea(), faker.music.songName(), faker.hacker.verb()
     ]
-    return randomWordList.sort()[0];
+    return randomWordList.sort()[0]
+  }
+
+  switchTheme(): void{
+    let bodyDocument = document.body
+    if(bodyDocument.classList.contains('darkMode')){
+      bodyDocument.classList.remove('darkMode')
+      bodyDocument.classList.add('lightMode')
+      bodyDocument.classList.add('theme-transition')
+      localStorage['theme'] = 'lightMode'
+    }else{
+      bodyDocument.classList.remove('lightMode')
+      bodyDocument.classList.add('darkMode')
+      bodyDocument.classList.add('theme-transition')
+      localStorage['theme'] = 'darkMode'
+    }
   }
 
   start(){
     this.gameStarted = true;
    let startInterval = setInterval(() => {
       if(this.startTimeLeft > 0) {
-        this.introductionText = 'Vai começar em: ' + this.startTimeLeft;
-        this.startTimeLeft--;
+        this.introductionText = 'Vai começar em: ' + this.startTimeLeft
+        this.startTimeLeft--
       } else {
-        this.startTimeLeft = 0;
+        this.startTimeLeft = 0
         this.introductionText = 'VAI!!'
         this.pauseTimer(startInterval)
-        this.startTimer();
+        this.startTimer()
       }
     },1000)
   }
 
   checkText(): void {
     if (this.inputValue == this.randomWord) {
-      this.randomWord = this.getRandomWords();
-      this.inputValue = '';
-      this.actualPoiting = + this.actualPoiting + 100;
+      this.randomWord = this.getRandomWords()
+      this.inputValue = ''
+      this.actualPoiting = + this.actualPoiting + 100
       this.timeLeft = 10;
       if (this.actualPoiting > localStorage['pontuação']) {
-        localStorage['pontuação'] = this.actualPoiting;
-        this.poiting = this.actualPoiting;
+        localStorage['pontuação'] = this.actualPoiting
+        this.poiting = this.actualPoiting
       }
     }
   }
@@ -83,33 +110,33 @@ export class FingerSpeedComponent implements OnInit {
         allowOutsideClick: false,
         allowEscapeKey: false
       })
-      this.record = localStorage['pontuação'];
+      this.record = localStorage['pontuação']
     }
     this.timeLeft = 0;
-    this.timerOver = true;
-    this.inputValue = '';
-    this.cantWrite = true;
+    this.timerOver = true
+    this.inputValue = ''
+    this.cantWrite = true
     this.introductionText = 'Tempo esgotado! Clique no play para começar novamente'
-    this.gameStarted = false;
+    this.gameStarted = false
     this.pauseTimer(this.interval)
-    this.timeLeft = 10;
-    this.startTimeLeft = 5;
-    this.actualPoiting = 0;
+    this.timeLeft = 10
+    this.startTimeLeft = 5
+    this.actualPoiting = 0
   }
 
   startTimer(): void {
-    this.cantWrite = false;
+    this.cantWrite = false
     this.interval = setInterval(() => {
       if(this.timeLeft > 0) {
-        this.timeLeft--;
+        this.timeLeft--
       } else {
-        this.timeLeft = 0;
-        this.gameOver();
+        this.timeLeft = 0
+        this.gameOver()
       }
     },1000)
   }
 
   pauseTimer(interval: NodeJS.Timer): void {
-    clearInterval(interval);
+    clearInterval(interval)
   }
 }

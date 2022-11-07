@@ -5,7 +5,6 @@ import { FingerSpeedService } from './service';
 import { FormsModule } from '@angular/forms';
 
 
-
 @NgModule({
   declarations: [
     FingerSpeedComponent
